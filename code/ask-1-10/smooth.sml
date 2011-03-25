@@ -19,13 +19,17 @@ fun so_smooth nil num nil = 1073741823
 |   so_smooth (h::t) num smoothnes= 
         if (num mod h) = 0 then so_smooth t num (h::smoothnes) else so_smooth t num smoothnes;
   
-fun smoothie n = so_smooth (make_primelist (odd_numbs n) [2]) n [];
+fun smoothie m n = so_smooth m n nil;
 
 fun smooth b i j =
-  if i=j 
-  then 
-    if (smoothie i) <= b then 1 else 0 
-  else
-    if (smoothie i) <= b then (1 + smooth b (i+1) j) else smooth b (i+1) j;
-
-
+  let 
+    val primelist = make_primelist (odd_numbs j) [2]
+    fun msmooth primelist b i j = 
+    if i=j
+    then 
+      if (smoothie primelist i) <= b then 1 else 0 
+    else
+      if (smoothie primelist i) <= b then (1 + msmooth primelist b (i+1) j) else msmooth primelist b (i+1) j
+  in msmooth primelist b i j
+  end;
+smooth 10 20 190000;
