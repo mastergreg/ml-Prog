@@ -19,7 +19,7 @@ fun so_smooth nil num nil = 1073741823
 |   so_smooth (h::t) num smoothnes= 
         if h <= num 
           then if (num mod h) = 0 then so_smooth t num (h::smoothnes) else so_smooth t num smoothnes
-          else so_smooth nil num nil;
+          else hd(smoothnes);
   
 fun smoothie m n = so_smooth m n nil;
 
