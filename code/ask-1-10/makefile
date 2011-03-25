@@ -1,2 +1,2 @@
 all: smooth.sml
-	sml < smooth.sml
+	poly < smooth.sml

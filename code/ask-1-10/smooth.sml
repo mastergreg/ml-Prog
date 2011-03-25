@@ -14,7 +14,7 @@ fun append [] ys      = ys
 fun make_primelist nil m = m
 |   make_primelist (h::t) m = if isprime h m then make_primelist t (append m [h]) else make_primelist t m;
 
-fun so_smooth nil num nil = 1073741823
+fun so_smooth nil num nil = valOf (Int.maxInt) 
 |   so_smooth nil num (h::t) = h
 |   so_smooth (h::t) num smoothnes= 
         if h <= num 
