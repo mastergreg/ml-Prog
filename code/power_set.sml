@@ -8,7 +8,7 @@ fun isert a nil = nil
 
 
 fun power_set nil = nil
-|   power_set (l::ls) =([l]::power_set(ls));
+|   power_set (l::ls) =[l]::power_set(ls);
 
 val mls = [[1,2,3],[2,3,4],[5,5,3],nil];
 isert 1 mls;
