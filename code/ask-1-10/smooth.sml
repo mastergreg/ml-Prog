@@ -34,4 +34,13 @@ fun smooth b i j =
       if (smoothie primelist i) <= b then (1 + msmooth primelist b (i+1) j) else msmooth primelist b (i+1) j
   in msmooth primelist b i j
   end;
-smooth 10 20 190000;
+
+fun main() = 
+  let 
+    val iti =  smooth 10 20 190000;
+    val st = Int.toString iti;
+    val (h::t)= CommandLine.arguments();
+  in print st;
+  print h
+  end
+val _ = main ()

@@ -1,2 +1,3 @@
-all: smooth.sml
-	poly < smooth.sml
+PROG=smooth.sml
+all: ${PROG}
+	mlton ${PROG}
