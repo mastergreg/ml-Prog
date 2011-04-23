@@ -9,7 +9,15 @@ unsigned int buffer[64],number2[64],number[64];
 
 static void addB_1(unsigned int n,unsigned int b)
 {
-  unsigned int buff,c=b-1;
+  unsigned int buff,c;
+  if(n%2==1) 
+  {
+    c=b*b-1;
+  }
+  else
+  {
+    c=b-1;
+  }
   int i = (int) n-1;
   for (;i>=0;i--)
   {
