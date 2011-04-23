@@ -25,7 +25,7 @@ unsigned int convert_to_base_X(unsigned int n,unsigned int b)
 }
 unsigned int sortNumS(long n,unsigned int base) 
 {
-  unsigned int ans=0,i=0,power;
+  unsigned int ans=0,i=0;
   for ( unsigned int l = base-1; ; --l )
   {
     unsigned int rem = n % base;
