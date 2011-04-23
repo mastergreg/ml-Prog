@@ -83,7 +83,8 @@ static int ismagic(unsigned int n,unsigned int b)
   unsigned int i;
   for(i=0;i<n;i++)
   {
-    number2[i]=number[i]=buffer[i];
+    number[i]=buffer[i];
+    number2[i]=number[i];
   }
   qsort(number,n,sizeof(unsigned int),compare);
   qsort(number2,n,sizeof(unsigned int),compare2);
@@ -102,19 +103,19 @@ static int ismagic(unsigned int n,unsigned int b)
 
 static unsigned int magic(unsigned int n, unsigned int b)
 {
-//  unsigned int i;
+  unsigned int i;
   //bigrandom_X(n,b);
   addB_1(n,b);
-  while(ismagic(n,b)!=1)
+  while(ismagic(n,b)==0)
   {
-    /*    printf("\n");
+  }
+    /*
+    printf("\n");
           for(i=0;i<n;i++)
           {
           printf("%u",number[i]);
           }
-          */
-  }
-  printf("\nSame one\n");
+  printf("\nSame one\n");*/
   return 0;
 }
 int main(int argc, char* argv[])
@@ -128,7 +129,7 @@ int main(int argc, char* argv[])
   }
   sscanf(argv[1], "%u", &b);
   sscanf(argv[2], "%u", &n);
-  if(magic(n,b)==1)
+  if(magic(n,b)==0)
   {
     for(i=0;i<n;i++)
     {
