@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include "convert.h"
+#include <math.h>
 
 unsigned int buffer[64],number2[64],number[64];
 
@@ -57,34 +57,6 @@ static int compare2 (const void *a,const void *b)
 {
   return ( *(int*)b - *(int*)a );
 }
-static void bigrandom_X(unsigned int n,unsigned int b)
-{
-  unsigned int i;
-  //unsigned int k = 0,i;
-  // First digit must be non-zero:
-  /*  srand(time(NULL));
-      do
-      {
-      k = rand() % b;
-      } while(k == 0);
-
-      number[0]=k;
-      for(i = 1; i < n; i++)
-      {
-      k = rand() % b;
-      number[i]=k;
-      }
-      */ for (i=0;i<n;i++)
-  {
-    number[i]=(i*i)%b;
-  }
-  for (i=n;i<64;i++)
-  {
-    number[i]=0;
-  }
-
-}
-
 
 static int ismagic(unsigned int n,unsigned int b)
 {
@@ -111,20 +83,11 @@ static int ismagic(unsigned int n,unsigned int b)
 
 static unsigned int magic(unsigned int n, unsigned int b)
 {
-  unsigned int i;
-  //bigrandom_X(n,b);
   addB_1(n,b);
   while(ismagic(n,b)==0)
   {
   }
-    /*
-    printf("\n");
-          for(i=0;i<n;i++)
-          {
-          printf("%u",number[i]);
-          }
-  printf("\nSame one\n");*/
-  return 0;
+   return 0;
 }
 int main(int argc, char* argv[])
 {
@@ -133,7 +96,7 @@ int main(int argc, char* argv[])
   unsigned int i;
   unsigned int answer=0;
   if (argc != 3) {
-    printf("Usage: magic n b\n"); return 1;
+    printf("Usage: magic b n\n"); return 1;
   }
   sscanf(argv[1], "%u", &b);
   sscanf(argv[2], "%u", &n);
