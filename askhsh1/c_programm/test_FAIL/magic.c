@@ -7,14 +7,14 @@
 unsigned int buffer[64],*bff,*num2,number2[64],*num,number[64];
 
 
-static unsigned int diffn(unsigned int n,unsigned int b)
+static unsigned long long int diffn(unsigned int n,unsigned int b)
 {
   unsigned int i;
   unsigned int diff=0;
   unsigned int d=n/2;
-  for (i=1;i<d;i++)
+  for (i=1;i<=d;i++)
   {
-    diff+=((unsigned int)((pow(b,n-2-i-i)-1)*pow(b,i)))*(number[i]-number[n-i-1]);
+    diff+=((unsigned int)((pow(b,n-1-i-i)-1)*pow(b,i)))*(number[i]-number[n-i-1]);
   }
   diff+=((unsigned int)(pow(b,n-1)-1))*(number[0]-number[n-1]);
   return diff;
@@ -75,7 +75,8 @@ static int compare (const void *a,const void *b)
 
 static int ismagic(unsigned int n,unsigned int b)
 {
-  unsigned int i,diffbuff,diff=0;
+  unsigned int i;
+  unsigned long long int diffbuff,diff=0;
   num=number;
   bff=buffer;
   for(i=0;i<n;i++)
@@ -117,7 +118,7 @@ static int ismagic(unsigned int n,unsigned int b)
     }
   }
   */
-  printf("Diffbuff: %u\n",diffbuff);
+  printf("Diffbuff: %llu\n",diffbuff);
   return 1;
 }
 
