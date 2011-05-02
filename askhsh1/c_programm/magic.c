@@ -7,7 +7,7 @@
 unsigned int buffer[64],number2[64],number[64];
 
 
-static void addB_1(unsigned int n,unsigned int b)
+static void next_test(unsigned int n,unsigned int b)
 {
   unsigned int buff,c;
   if(n%2==1) 
@@ -28,7 +28,7 @@ static void addB_1(unsigned int n,unsigned int b)
   }
 }
 
-static void addB(unsigned int n,unsigned int b)
+static void addComplement(unsigned int n,unsigned int b)
 {
   unsigned int buff,c=1;
   int i = (int) n-1;
@@ -59,8 +59,7 @@ static int ismagic(unsigned int n,unsigned int b)
   unsigned int i;
   for(i=0;i<n;i++)
   {
-    number[i]=buffer[i];
-    number2[i]=number[i];
+    number2[i]=number[i]=buffer[i];
   }
   qsort(number,n,sizeof(unsigned int),compare);
   for(i=0;i<n;i++)
@@ -68,12 +67,11 @@ static int ismagic(unsigned int n,unsigned int b)
     number2[i]=number[n-i-1];
   }
   complementB(n,b);
-  addB(n,b);
+  addComplement(n,b);
   for (i=0;i<n;i++)
   {
     if(buffer[i]!=number[i]) 
     {
-      addB_1(n,b);
       return 0;
     }
   }
@@ -82,9 +80,10 @@ static int ismagic(unsigned int n,unsigned int b)
 
 static unsigned int magic(unsigned int n, unsigned int b)
 {
-  addB_1(n,b);
+  next_test(n,b);
   while(ismagic(n,b)==0)
   {
+      next_test(n,b);
   }
    return 0;
 }
@@ -94,8 +93,10 @@ int main(int argc, char* argv[])
   unsigned int n;
   unsigned int i;
   unsigned int answer=0;
-  if (argc != 3) {
-    printf("Usage: magic b n\n"); return 1;
+  if (argc != 3) 
+  {
+    printf("Usage: magic b n\n"); 
+    return 1;
   }
   sscanf(argv[1], "%u", &b);
   sscanf(argv[2], "%u", &n);
