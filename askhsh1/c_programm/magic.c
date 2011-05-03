@@ -4,12 +4,13 @@
 #include <string.h>
 #include <math.h>
 
-unsigned int buffer[64],number2[64],number[64];
+unsigned int magi[64],buffer[64],number2[64],number[64];
 
 
 static void next_test(unsigned int n,unsigned int b)
 {
-  unsigned int buff,c;
+  unsigned int buff,c=1;
+/*
   if(n%2==1) 
   {
     c=b*b-1;
@@ -18,6 +19,7 @@ static void next_test(unsigned int n,unsigned int b)
   {
     c=b-1;
   }
+  */
   int i = (int) n-1;
   for (;i>=0;i--)
   {
@@ -25,6 +27,13 @@ static void next_test(unsigned int n,unsigned int b)
     buffer[i]=buff%b;
     c=buff/b;
     if (c==0) break;
+  }
+  for(i=0;i<(int)n-1;i++)
+  {
+    if(buffer[i+1]==0)
+    {
+      buffer[i+1]=buffer[i];
+    }
   }
 }
 
@@ -61,7 +70,10 @@ static int  extra_test(unsigned int n,unsigned int b)
   {
 //    printf("number[i] %u\n",number[i]);
     if((number[n-i-1]-number[i])<(number[n-i-2]-number[i+1]))
+    {
+      printf("%u - %u %u - %u\n\n",number[n-i-1],number[i],number[n-i-2],number[i+1]);
       return 1;
+    }
     else
       continue;
   }
@@ -74,11 +86,22 @@ static int ismagic(unsigned int n,unsigned int b)
   {
     number[i]=buffer[i];
   }
+  for(i=0;i<n;i++)
+  {
+//    printf("%u ",number[i]);
+    number2[i]=number[n-i-1];
+  }
+  complementB(n,b);
+  addComplement(n,b);
+  for(i=0;i<n;i++)
+  {
+    magi[i]=number[i];
+  }
   qsort(number,n,sizeof(unsigned int),compare);
-  if (extra_test(n,b)==1) 
+/*  if (extra_test(n,b)==1) 
   {
     return 0;
-  }
+  }*/
   for(i=0;i<n;i++)
   {
 //    printf("%u ",number[i]);
@@ -88,7 +111,7 @@ static int ismagic(unsigned int n,unsigned int b)
   addComplement(n,b);
   for (i=0;i<n;i++)
   {
-    if(buffer[i]!=number[i]) 
+    if(magi[i]!=number[i]) 
     {
       return 0;
     }
