@@ -54,6 +54,19 @@ static int compare (const void *a,const void *b)
   return ( *(int*)a - *(int*)b );
 }
 
+static int  extra_test(unsigned int n,unsigned int b)
+{
+  int i,ndiv2=(n/2)-1;
+  for (i=0;i<ndiv2;i++)
+  {
+//    printf("number[i] %u\n",number[i]);
+    if((number[n-i-1]-number[i])<(number[n-i-2]-number[i+1]))
+      return 1;
+    else
+      continue;
+  }
+  return 0;
+}
 static int ismagic(unsigned int n,unsigned int b)
 {
   unsigned int i;
@@ -62,8 +75,13 @@ static int ismagic(unsigned int n,unsigned int b)
     number[i]=buffer[i];
   }
   qsort(number,n,sizeof(unsigned int),compare);
+  if (extra_test(n,b)==1) 
+  {
+    return 0;
+  }
   for(i=0;i<n;i++)
   {
+//    printf("%u ",number[i]);
     number2[i]=number[n-i-1];
   }
   complementB(n,b);
