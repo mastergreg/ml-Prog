@@ -59,7 +59,7 @@ static int ismagic(unsigned int n,unsigned int b)
   unsigned int i;
   for(i=0;i<n;i++)
   {
-    number2[i]=number[i]=buffer[i];
+    number[i]=buffer[i];
   }
   qsort(number,n,sizeof(unsigned int),compare);
   for(i=0;i<n;i++)
