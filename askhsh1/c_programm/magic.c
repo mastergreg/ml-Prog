@@ -9,7 +9,7 @@ unsigned int magi[64],buffer[64],number2[64],number[64];
 
 static void next_test(unsigned int n,unsigned int b)
 {
-  unsigned int buff,c=1;
+  unsigned int buff,c=1,ndiv2=n/2-1;
 /*
   if(n%2==1) 
   {
@@ -30,10 +30,15 @@ static void next_test(unsigned int n,unsigned int b)
   }
   for(i=0;i<(int)n-1;i++)
   {
-    if(buffer[i+1]==0)
+    if(buffer[i+1]<buffer[i])
     {
       buffer[i+1]=buffer[i];
     }
+      }
+  if(buffer[ndiv2]==1)
+  {
+    printf("0\n");
+    exit(0);
   }
 }
 
@@ -63,25 +68,27 @@ static int compare (const void *a,const void *b)
   return ( *(int*)a - *(int*)b );
 }
 
-static int  extra_test(unsigned int n,unsigned int b)
+static void  extra_test( int n, int b)
 {
-  int i,ndiv2=(n/2)-1;
+  int i,diff1,diff2,ndiv2=(n/2)-1;
   for (i=0;i<ndiv2;i++)
   {
-//    printf("number[i] %u\n",number[i]);
-    if((number[n-i-1]-number[i])<(number[n-i-2]-number[i+1]))
+    //    printf("number[i] %u\n",number[i]);
+    diff1=buffer[n-i-1]-buffer[i];
+    diff2=buffer[n-i-2]-buffer[i+1];
+    if(diff1<diff2)
     {
-      printf("%u - %u %u - %u\n\n",number[n-i-1],number[i],number[n-i-2],number[i+1]);
-      return 1;
+      printf("failed extra test\n");
+      //  printf("%u - %u %u - %u\n\n",number[n-i-1],number[i],number[n-i-2],number[i+1]);
+      next_test(n,b);
+      extra_test(n,b);
     }
-    else
-      continue;
   }
-  return 0;
 }
 static int ismagic(unsigned int n,unsigned int b)
 {
   unsigned int i;
+  extra_test(n,b);
   for(i=0;i<n;i++)
   {
     number[i]=buffer[i];
@@ -133,7 +140,7 @@ int main(int argc, char* argv[])
   unsigned int b;
   unsigned int n;
   unsigned int i;
-  unsigned int answer=0;
+  //unsigned long long int answer=0;
   if (argc != 3) 
   {
     printf("Usage: magic b n\n"); 
@@ -146,9 +153,9 @@ int main(int argc, char* argv[])
     for(i=0;i<n;i++)
     {
       printf("%u ",number[i]);
-      answer+=number[i]*pow(b,n-i-1);
+      //answer+=number[i]*pow(b,n-i-1);
     }
-    printf("\n%u",answer);
+    //printf("\n%llu",answer);
   }
   else printf("DAMN\n");
   //printf("\n", magic(n,b));
