@@ -9,7 +9,15 @@ unsigned int magi[64],buffer[64],number2[64],number[64];
 
 static void next_test(unsigned int n,unsigned int b)
 {
-  unsigned int buff,c=1,ndiv2=n/2-1;
+  unsigned int buff,c=1,ndiv2;
+  if (n%2==1)
+  {
+    ndiv2=n/2+1;
+  }
+  else
+  {
+    ndiv2=n/2;
+  }
 /*
   if(n%2==1) 
   {
@@ -67,7 +75,7 @@ static int compare (const void *a,const void *b)
 {
   return ( *(int*)a - *(int*)b );
 }
-
+/*
 static void  extra_test( int n, int b)
 {
   int i,diff1,diff2,ndiv2=(n/2)-1;
@@ -85,10 +93,11 @@ static void  extra_test( int n, int b)
     }
   }
 }
+*/
 static int ismagic(unsigned int n,unsigned int b)
 {
   unsigned int i;
-  extra_test(n,b);
+//  extra_test(n,b);
   for(i=0;i<n;i++)
   {
     number[i]=buffer[i];
