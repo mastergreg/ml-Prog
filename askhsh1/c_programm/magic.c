@@ -4,30 +4,12 @@
 #include <string.h>
 #include <math.h>
 
-unsigned int magi[64],buffer[64],number2[64],number[64];
+unsigned int toprint[86],magi[64],buffer[64],number2[64],number[64];
 
 
 static void next_test(unsigned int n,unsigned int b)
 {
-  unsigned int buff,c=1,ndiv2;
-  if (n%2==1)
-  {
-    ndiv2=n/2+1;
-  }
-  else
-  {
-    ndiv2=n/2;
-  }
-/*
-  if(n%2==1) 
-  {
-    c=b*b-1;
-  }
-  else
-  {
-    c=b-1;
-  }
-  */
+  unsigned int buff,c=1,ndiv2=n/2-1;
   int i = (int) n-1;
   for (;i>=0;i--)
   {
@@ -49,7 +31,45 @@ static void next_test(unsigned int n,unsigned int b)
     exit(0);
   }
 }
-
+static void add_to_printbuffer(unsigned int num)
+{
+  int i,j;
+  unsigned int buff,c=0;
+  for (i=85,j=63;j>=0;j--,i--)
+  {
+    buff=toprint[i]+number[j];
+    toprint[i]=buff;
+    num/=10; 
+  }
+}
+static void print_number(unsigned int n,unsigned int b)
+{
+  unsigned long long int n1=0,n2=0;
+  unsigned int i,ndiv2=n/2;
+  if (b<10)
+  {
+    for (i=0;i<n;i++)
+    {
+      n1+=number[n-i-1]*pow(b,i);
+    }
+    printf("%llu\n",n1);
+  }
+  else if (b==10)
+  {
+    for (i=0;i<n;i++)
+    {
+      printf("%u",number[i]);
+    }
+    printf("\n",n1);
+  }
+  else
+  {
+    for(i=0;i<n;i++)
+    {
+       
+    }
+  }
+}
 static void addComplement(unsigned int n,unsigned int b)
 {
   unsigned int buff,c=1;
@@ -165,6 +185,7 @@ int main(int argc, char* argv[])
       //answer+=number[i]*pow(b,n-i-1);
     }
     //printf("\n%llu",answer);
+    print_number(n,b);
   }
   else printf("DAMN\n");
   //printf("\n", magic(n,b));
