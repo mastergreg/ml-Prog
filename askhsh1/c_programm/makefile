@@ -1,4 +1,4 @@
-LIBS=-lm
+LIBS=-lm -lgmp
 EXTRAS=-Wall -Wextra -O3
 all:	magic
 magic:	magic.c
