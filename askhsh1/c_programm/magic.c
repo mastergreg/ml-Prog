@@ -49,10 +49,14 @@ static void print_number(unsigned int n,unsigned int b)
 static void addComplement(unsigned int n,unsigned int b)
 {
   unsigned int buff,c=1;
-  int i = (int) n-1;
-  for (;i>=0;i--)
+  int i;
+  for (i = (int) n-1;i>=0;i--)
   {
-    buff=number[i]+number2[i]+c;
+    number2[i] = number[n-i-1];
+  }
+  for (i = (int) n-1;i>=0;i--)
+  {
+    buff=b-1-number[i]+number2[i]+c;
     number[i]=buff%b;
     c=buff/b;
   }
@@ -60,10 +64,10 @@ static void addComplement(unsigned int n,unsigned int b)
 static void complementB(unsigned int n,unsigned int b)
 {
   int i;
-  for(i = (int) n ; i >= 0;i--)
+  for(i = (int) n-1 ; i >= 0;i--)
   {
-    number2[n-i-1] = number[i];
-    number[i] = b-1-number[i];
+//    number2[n-i-1] = number[i];
+//    number[i] = b-1-number[i];
   }
 }
 
