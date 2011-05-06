@@ -1,7 +1,7 @@
-LIBS=-lm -lgmp
-EXTRAS=-Wall -Wextra -O3
+LIBS=-lgmp
+EXTRAS=-O3
 all:	magic
 magic:	magic.c
-	g++ ${LIBS} magic.c -o magic ${EXTRAS}
+	gcc ${LIBS} magic.c -o magic ${EXTRAS}
 clean:
 	rm magic

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include <math.h>
 #include <gmp.h>
 unsigned int magi[64],buffer[64],number2[64],number[64];
 
