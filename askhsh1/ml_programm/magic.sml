@@ -121,11 +121,11 @@ fun magic b n =
     
 fun main() =
   let
-    val (b::n::t)= CommandLine.arguments()
-    val iti = magic b n
-    val st = Int.toString iti
+    val (b::n::t)= (CommandLine.arguments())
+    val iti = magic (Option.valOf (Int.fromString b)) (Option.valOf (Int.fromString n))
+    val st = LargeInt.toString iti
   in 
-    print st;
+    print st
   end
 val _ = main ()
 
