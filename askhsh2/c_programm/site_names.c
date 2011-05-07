@@ -19,11 +19,14 @@ void fill(tri * head,char i)
   unsigned int children,buf;
   while(i!='\n')
   {
-    for(children=current->children;children>0;children--)
+    children=current->children;
+    for(;children>0;children--)
     {
       if (current->child[children-1]->character==i)
       {
         current->child[children-1]->counter++;
+        buf=current->level*current->counter;
+        max = (max>buf)?max:buf;
         current=current->child[children-1];
         break;
       }
@@ -38,10 +41,10 @@ void fill(tri * head,char i)
       current->children++;
       current=newchild;
     }
+    buf=current->level*current->counter;
+    max = (max>buf)?max:buf;
     i=getchar();
   }
-  buf=current->level*current->counter;
-  max = (max>buf)?max:buf;
 }
 
 int main(int argc, char **argv)
@@ -49,6 +52,7 @@ int main(int argc, char **argv)
   char i;
   tri * head;
   head=(tri *)calloc(1,sizeof(tri));
+  i=getchar();
   while((i=getchar())!=EOF)
   {
     fill(head,i); 
