@@ -52,7 +52,7 @@ int main(int argc, char **argv)
   char i;
   tri * head;
   head=(tri *)calloc(1,sizeof(tri));
-  i=getchar();
+  while(i=getchar()!='\n');
   while((i=getchar())!=EOF)
   {
     fill(head,i); 

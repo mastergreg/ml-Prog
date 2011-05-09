@@ -29,8 +29,8 @@ fun nextTest (b:int) (l:int list) =
     |   nextTesth b l 0               = l
     |   nextTesth b (h::t) c          = 
             let
-              val dig = (h+c) mod b
-              val c = (h+c) div b
+              val dig = if (h+c) < b then h+c else 0
+              val c = if (h+c) < b then 0 else 1
             in
               dig :: nextTesth b t c
             end
@@ -52,14 +52,14 @@ fun sub b xs ys =
     |   subh _ _ [] _ acc = acc
     |   subh b (x::xs) (y::ys) c acc = 
     let 
-      val al = x+b-1-y+c
-      val dig = al mod b
-      val c = al div b
+      val al = x-y-c
+      val dig = if al<0 then al+b else al
+      val c = if al < 0 then 1 else 0
     in
      subh b xs ys c (dig::acc)
     end
   in
-    subh b xs ys 1 nil
+    subh b xs ys 0 nil
   end 
   
 fun ismagic b l =
@@ -118,7 +118,7 @@ fun magic b n =
       fancyprint n b top 
     end
   end
-    
+
 fun main() =
   let
     val t= (CommandLine.arguments())
@@ -130,4 +130,3 @@ fun main() =
     print st
   end
 val _ = main ()
-
