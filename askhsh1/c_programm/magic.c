@@ -12,10 +12,16 @@ static void next_test(unsigned int n,unsigned int b)
   int i = (int) n-1;
   for (;i>=0;i--)
   {
-    buff=buffer[i]+c;
-    buffer[i]=buff%b;
-    c=buff/b;
-    if (c==0) break;
+    buffer[i]++;
+    if (buffer[i]<b)
+    {
+      break;
+    }
+    else
+    {
+      buffer[i]=0;
+      continue;
+    }
   }
   for(i=0;i<(int)n-1;i++)
   {
