@@ -1,4 +1,3 @@
-datatype trie = Empty | Node of (trie list)*char*int*int*int;
 fun parse file =
   let
     (* Open input file *)
@@ -21,7 +20,30 @@ fun parse file =
     read_name n nil
   end
 (*fun fill ls = *)
+fun existsInTrie (ls) (cht:char) =
+    let
+      fun existsInTrieH (children,ch,counter,level,chs) (cht:char) = ch=cht
+    in
+      existsInTrieH ls cht
+    end
 
+fun increaseTrieCnT (ls,ch,counter,level,chs)  = (ls,ch,counter+1,level,chs)
+    
+fun appendToTrie (ls,ch,count,level,chs) (cht:char) =((([],cht,1,level+1,0)::ls),ch,count,level,chs+1)
+    
+    
+fun retrightChild (father)(ls) (cht:char) =
+  let
+    fun retrifhtChildH (father) [] (cht:char) = appendToTrie father cht
+    fun retrifhtChildH (father) (l::ls) (cht:char) =
+      if existsInTrie l cht then increaseTrieCnT l else retrifhtChildH father ls cht
+  in
+    retrifhtChildH father ls cht
+  end
+
+fun nextChild level ([]) ch = [([],ch,1,level+1,0)]
+|   nextChild level (l::ls) ch = 
+  if existsInTrie l ch then (increaseTrieCnT l)::ls else l::nextChild level ls ch
 
 
 
