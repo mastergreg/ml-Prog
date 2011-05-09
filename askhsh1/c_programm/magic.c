@@ -52,9 +52,9 @@ static void print_number(unsigned int n,unsigned int b)
   }
   gmp_printf("%Zd\n",bigint);
 }
-static void addComplement(unsigned int n,unsigned int b)
+static void subtract(unsigned int n,unsigned int b)
 {
-  unsigned int buff,c=1;
+  int buff,c=0;
   int i;
   for (i = (int) n-1;i>=0;i--)
   {
@@ -62,21 +62,19 @@ static void addComplement(unsigned int n,unsigned int b)
   }
   for (i = (int) n-1;i>=0;i--)
   {
-    buff=b-1-number[i]+number2[i]+c;
-    number[i]=buff%b;
-    c=buff/b;
+    buff=number2[i]-number[i]-c;
+    if(buff<0) 
+    {
+      number[i]=buff+b;
+      c=1;
+    }
+    else
+    {
+      number[i]=buff;
+      c=0;
+    }
   }
 }
-static void complementB(unsigned int n,unsigned int b)
-{
-  int i;
-  for(i = (int) n-1 ; i >= 0;i--)
-  {
-//    number2[n-i-1] = number[i];
-//    number[i] = b-1-number[i];
-  }
-}
-
 
 static int compare (const void *a,const void *b)
 {
@@ -85,15 +83,13 @@ static int compare (const void *a,const void *b)
 static int ismagic(unsigned int n,unsigned int b)
 {
   unsigned int i;
-  complementB(n,b);
-  addComplement(n,b);
+  subtract(n,b);
   for(i=0;i<n;i++)
   {
     magi[i]=number[i];
   }
   qsort(number,n,sizeof(unsigned int),compare);
-  complementB(n,b);
-  addComplement(n,b);
+  subtract(n,b);
   for (i=0;i<n;i++)
   {
     if(magi[i]!=number[i]) 
