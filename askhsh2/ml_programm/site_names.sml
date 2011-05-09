@@ -51,6 +51,33 @@ fun nextChild level ([]) ch = [([],ch,1,level+1,0)]
 fun site_names file =
  let
   val ls = parse file
+
  in
    ls
  end
+
+
+
+
+fun get_head_of_strings ls ks = 
+  let
+    fun ghosH [] acc remainingstring = (acc,remainingstring)
+    |   ghosH (l::ls)  acc remainingstring = ghosH ls (put_in acc (hd(explode(l)))) ((implode(tl(explode(l))))::remainingstring)
+  in
+    ghosH ls ks []
+  end
+
+
+
+
+fun put_in [] cht = [(cht,1)]
+|   put_in ((ch,cnt)::ls) cht = if ch=cht then (ch,cnt+1)::ls else (ch,cnt)::put_in ls cht
+
+fun fillalllevels sls =
+  let
+    fun nextLevel level (acc,[]:string list) = (level,(acc,[]))
+    |   nextLevel level (acc,sls) = nextLevel (level+1) (get_head_of_strings(sls,acc))
+  in
+    nextLevel 1 ([],sls)
+  end
+
