@@ -26,8 +26,6 @@ void fill(tri * head,char i)
       if (current->childarray[children-1]->character==i)
       {
         current->childarray[children-1]->counter++;
-        buf=current->level*current->counter;
-        max = (max>buf)?max:buf;
         current=current->childarray[children-1];
         break;
       }
