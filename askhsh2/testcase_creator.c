@@ -3,7 +3,7 @@
 #include <time.h>
 
 #define ANSWER_DEPTH 4200
-#define ANSWER_COUNT 420
+#define ANSWER_COUNT 4200
 #define BASE_TOTAL 42
 #define MAX_STR 100
 #define TOTAL 4200
