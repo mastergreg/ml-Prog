@@ -9,20 +9,6 @@ fun quicksort [] = []
       in
          quicksort_r p (lst, [], [])
       end
-fun reverse xs = 
-  let
-    fun rev nil acc = acc
-    |   rev (hd::tl) acc = rev tl (hd::acc)
-  in
-    rev xs nil
-  end
-fun sort (nil) = nil
-|   sort (l) = let
-                 val p = List.nth(l, length(l) div 2)
-               in
-                 sort(List.filter(fn (v) => v < p)(l)) @ (p :: sort(List.filter(fn (v) => v > p)(l)))
-               end
-
 fun nextTest (b:int) (l:int list) = 
   let
     fun nextTesth b [] c  = []
@@ -42,7 +28,7 @@ fun extraTest (b:int) (l:int list) =
     fun extraTestH b [] p acc     = acc
     |   extraTestH b (h::t) p acc = if h >= p then extraTestH b t h (h::acc) else extraTestH b t p (p::acc)
   in
-    extraTestH b (reverse l) 0 []
+    extraTestH b (rev l) 0 []
   end
     
 
@@ -65,15 +51,9 @@ fun sub b xs ys =
 fun ismagic b l =
   let
     val sl = quicksort l
-    val ls = reverse sl
+    val ls = rev sl
   in
     sub b sl ls = l
-  end
-fun makeTestMagic b l =
-  let
-    val ls = reverse l
-  in
-    sub b l ls
   end
 fun checkZero n l = 
   let
@@ -107,7 +87,7 @@ fun magic b n =
       if checkZero n l then [0] 
         else 
             let
-              val candidate = sub b (reverse l) l
+              val candidate = sub b (rev l) l
             in
               if ismagic b candidate then candidate else magicH n b (extraTest b (nextTest b l))
             end
@@ -118,7 +98,7 @@ fun magic b n =
       fancyprint n b top 
     end
   end
-
+(*
 fun main() =
   let
     val t= (CommandLine.arguments())
@@ -130,3 +110,6 @@ fun main() =
     print st
   end
 val _ = main ()
+
+
+*)
