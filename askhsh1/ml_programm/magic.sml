@@ -98,7 +98,6 @@ fun magic b n =
       fancyprint n b top 
     end
   end
-(*
 fun main() =
   let
     val t= (CommandLine.arguments())
@@ -112,4 +111,3 @@ fun main() =
 val _ = main ()
 
 
-*)
