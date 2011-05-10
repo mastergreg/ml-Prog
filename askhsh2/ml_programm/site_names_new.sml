@@ -1,4 +1,4 @@
-datatype trie = Empty | Head of (trie list) | Node of (trie list*char*int*int*int);
+datatype trie = Head of (trie list)| Empty | Node of ((trie list)*int*char*int*int);
 fun parse file =
   let
     (* Open input file *)
@@ -23,21 +23,21 @@ fun parse file =
 (*fun fill ls = *)
 fun existsInTrie (ls:trie) (cht:char) =
     let
-      fun existsInTrieH Empty _ = false
-      |   existsInTrieH (Head(ls)) _ = false
-      |   existsInTrieH (Node (children,ch,counter,level,chs)) (cht:char) = ch=cht
+      fun existsInTrieH (Empty) cht:char = false
+      |   existsInTrieH (children,ch,counter,level,chs) (cht:char) = ch=cht
     in
       existsInTrieH ls cht
     end
-
-fun increaseTrieCnT (Node (ls,ch,counter,level,chs))  = (Node (ls,ch,counter+1,level,chs))
-|   increaseTrieCnT (l:trie)  = l 
+(*
+fun existsInChildren (Head (ls)) (cht:char) = 
+|   existsInChildren (Node (children,ch,counter,level,chs)) (cht:char) = 
+*)
+fun increaseTrieCnT (ls,ch,counter,level,chs)  = (ls,ch,counter+1,level,chs)
     
-fun appendToTrie (Node (ls,ch,count,level,chs)) (cht:char) =(Node ((Node ([],cht,1,level+1,0)::ls),ch,count,level,chs+1))
-|   appendToTrie (l:trie) (cht:char) = l
+fun appendToTrie (ls,ch,count,level,chs) (cht:char) =((([],cht,1,level+1,0)::ls),ch,count,level,chs+1)
     
     
-fun retrightChild (Node (father))(ls) (cht:char) =
+fun retrightChild (father)(ls) (cht:char) =
   let
     fun retrifhtChildH (father) [] (cht:char) = appendToTrie father cht
     fun retrifhtChildH (father) (l::ls) (cht:char) =
@@ -45,10 +45,11 @@ fun retrightChild (Node (father))(ls) (cht:char) =
   in
     retrifhtChildH father ls cht
   end
-
-fun nextChild level ([]) ch = [Node ([],ch,1,level+1,0)]
+(*
+fun nextChild level ([]) ch = [([],ch,1,level+1,0)]
 |   nextChild level (l::ls) ch = 
   if existsInTrie l ch then (increaseTrieCnT l)::ls else l::nextChild level ls ch
+*)
 
 fun myparseStart file = 
   let
@@ -61,38 +62,36 @@ fun myparseStart file =
   end
 
 
-
-
 fun site_names file =
  let
-  val ls = parse file
-
+  val ls = myparseStart file
  in
-   ls
+  ls
  end
-
-
 
 fun put_in [] cht = [(cht,1)]
 |   put_in ((ch,cnt)::ls) cht = if ch=cht then (ch,cnt+1)::ls else (ch,cnt)::put_in ls cht
 
-(*
-fun get_head_of_strings (ls:string list) (ks:char*int) = 
+
+
+
+fun get_head_of_strings level ls ks = 
   let
-    fun ghosH [] acc remainingstring = (acc:(char*int) list,remainingstring:string list)
-    |   ghosH (l::ls)  acc remainingstring = ghosH ls (put_in acc (hd(explode(l)))) ((implode(tl(explode(l))))::remainingstring)
+    fun ghosH level [] acc (remainingstring:string list) = (level,acc,remainingstring)
+    |   ghosH level (""::ls)  acc remainingstring = ghosH level ls acc remainingstring
+    |   ghosH level (l::ls)  acc remainingstring = ghosH level ls (put_in acc (hd(explode(l)))) ((implode(tl(explode(l))))::remainingstring)
   in
-    ghosH ls ks []
+    ghosH level ls ks []
   end
 
 
 
 
-fun fillalllevels sls =
+fun fillalllevels (sls:string list) =
   let
-    fun nextLevel level (acc,[]:string list) = (level,(acc,[]:string list))
-    |   nextLevel level (acc,sls) = nextLevel (level+1) (get_head_of_strings(sls,acc))
+    fun nextLevel (level,acc,[]:string list) = (level,(acc,[]))
+    |   nextLevel (level,acc,sls) = nextLevel (get_head_of_strings (level+1) sls acc)
   in
-    nextLevel 1 ([],sls)
+    nextLevel (1,[],sls)
   end
-*)
+
