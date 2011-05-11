@@ -1,4 +1,5 @@
-datatype trie = Empty | Head of (trie list) | Node of (trie list*char*int*int*int);
+(*datatype trie = Empty | Head of (trie list) | Node of (trie list*char*int*int*int);
+datatype tr = Tr of (string*char*int);*)
 fun parse file =
   let
     (* Open input file *)
@@ -21,6 +22,7 @@ fun parse file =
     read_name n nil
   end
 (*fun fill ls = *)
+(*
 fun existsInTrie (ls:trie) (cht:char) =
     let
       fun existsInTrieH Empty _ = false
@@ -37,19 +39,22 @@ fun appendToTrie (Node (ls,ch,count,level,chs)) (cht:char) =(Node ((Node ([],cht
 |   appendToTrie (l:trie) (cht:char) = l
     
     
-fun retrightChild (Node (father))(ls) (cht:char) =
+*)
+(*
+fun nextTlist [] c level = [(Node ([],c,1,level,0))]
+|   nextTlist (t::tls) c level = if existsInTrie t c then ((increaseTrieCnT t)::tls) else (t::(nextTlist tls c level))
+*)
+(*
+fun fillnames str:string tr:trie = 
   let
-    fun retrifhtChildH (father) [] (cht:char) = appendToTrie father cht
-    fun retrifhtChildH (father) (l::ls) (cht:char) =
-      if existsInTrie l cht then increaseTrieCnT l else retrifhtChildH father ls cht
-  in
-    retrifhtChildH father ls cht
-  end
+    val name = explode (str)
+    fun fillnamesH []   tri:trie = tri
+    |   fillnamesH (n::ame) Head(ls) = (Head (nextTlist ls n 0)
+    |   fillnamesH (n::ame) tri:trie = 
+      
 
-fun nextChild level ([]) ch = [Node ([],ch,1,level+1,0)]
-|   nextChild level (l::ls) ch = 
-  if existsInTrie l ch then (increaseTrieCnT l)::ls else l::nextChild level ls ch
-
+*)
+(*
 fun myparseStart file = 
   let
     val input = TextIO.openIn file
@@ -57,9 +62,70 @@ fun myparseStart file =
     fun myparse () = Option.valOf (TextIO.input1 input)
     fun filldom (x:char) (trs:trie) = existsInTrie trs x
   in
-    filldom (myparse () ) (Empty)
+    filldom (myparse () ) (Head [])
+  end
+*)
+
+fun isin (prefix,counter) [] = counter
+|   isin ("",counter) _ = 0
+|   isin (prefix,counter) ((st::sts):string list) = 
+  if prefix=st then isin (prefix,counter+1) sts else isin (prefix,counter) sts
+
+
+fun maxInstances pls = 
+  let
+    fun maxInstancesH [] max = max
+    |   maxInstancesH (p::pls) max = 
+      let
+        val buf = isin (p,1) pls
+      in
+        if max<buf then maxInstancesH pls buf else maxInstancesH pls max
+      end
+  in
+    maxInstancesH pls 0
   end
 
+
+
+fun buildPrefix (st:string) = 
+  let
+    val lst = explode st
+    fun buildPrefixH  [] pref acc = rev acc
+    |   buildPrefixH (l::lst) pref acc =
+      let
+        val prefix=pref^str(l)
+      in
+        buildPrefixH lst prefix (prefix::acc)
+      end
+    in
+      buildPrefixH lst "" []
+    end
+
+fun testList (st:string) ([]:string list) = 0
+|   testList (st:string) ((s::ls):string list) = 
+  if (st=s) then size(st) else 
+    if String.isPrefix st s then  testList st ls else 0
+     
+fun ls (ass:string list) (bss:string list) =
+  let
+    fun lsH [] _ acc = acc
+    |   lsH _ [] acc = acc
+    |   lsH ((a::ass):string list) ((b::bss):string list) acc = 
+      if a=b then lsH ass bss acc+1 else acc
+  in
+    lsH ass bss 0
+  end
+  
+
+
+fun mhd [] = ""
+|   mhd ls = hd(ls)
+fun get_Heads sls = map mhd sls 
+
+
+fun mtd [] = []
+|   mtd ls = tl(ls)
+fun get_Tails sls = map mtd sls 
 
 
 
@@ -70,8 +136,10 @@ fun site_names file =
  in
    ls
  end
-
-
+(*
+fun nerves = t:tr list chls:string list = 
+  val nervesH [] chls = map
+*)
 
 fun put_in [] cht = [(cht,1)]
 |   put_in ((ch,cnt)::ls) cht = if ch=cht then (ch,cnt+1)::ls else (ch,cnt)::put_in ls cht
@@ -96,3 +164,31 @@ fun fillalllevels sls =
     nextLevel 1 ([],sls)
   end
 *)
+
+fun makeNList n = 
+  let
+    fun makeNListH 0 acc  = acc
+    |   makeNListH n acc = makeNListH (n-1) ([]::acc)
+  in
+    makeNListH n []
+  end
+
+
+
+fun main_test file = 
+  let
+    val sls = parse file
+    val prefixes = (map buildPrefix sls)
+    fun main_testH ([]:string list list) (max:int) (level:int)= max 
+    |   main_testH prefixes max level= 
+      if prefixes = makeNList (length prefixes)  then max else
+      let
+        val buf = (maxInstances (get_Heads prefixes))*level
+      in
+        if max<buf then main_testH (get_Tails prefixes) buf (level+1) else main_testH (get_Tails prefixes) max (level+1)
+      end
+  in
+    main_testH prefixes 0 1
+  end
+       
+      
