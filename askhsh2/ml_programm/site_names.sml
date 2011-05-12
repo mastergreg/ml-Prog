@@ -21,28 +21,7 @@ fun parse file =
   in
     read_name n nil
   end
-fun quicksort2 (pls:string list) =
-  let
-    val filt = List.filter
-    fun quicksort << xs = 
-      let
-        fun qs [] = []
-        | qs [x] = [x]
-        | qs (p::xs) = 
-        let
-          val lessThanP = (fn x => << (x, p))
-        in
-          qs (filt lessThanP xs) @ p :: (qs (filt (not o lessThanP) xs))
-        end
-      in
-        qs xs
-      end
-   in
-     quicksort String.< pls
-   end
-
-
-fun quicksort [] = []
+fun quicksort ([]:string list) = []
 |   quicksort (p::lst) = 
       let fun quicksort_r pivot ([], front, back) =  (quicksort front) @ [pivot] @ (quicksort back)
           |   quicksort_r pivot (x::xs, front, back) = 
@@ -53,6 +32,8 @@ fun quicksort [] = []
       in
          quicksort_r p (lst, [], [])
       end
+
+
 (*
 fun isin prefix counter [] = counter
 |   isin "" counter _ = 0
@@ -83,7 +64,7 @@ fun conStrList l1 l2 =
 
 
 fun isin (prefix,counter) counter_old [] = if counter>counter_old then counter else counter_old
-|   isin ("",_) _  _ = 0
+|   isin ("",counter) counter_old  _ = counter_old 
 |   isin (prefix,counter) counter_old ((st::sts)) = 
   if prefix=st 
     then 
@@ -97,7 +78,7 @@ fun isin (prefix,counter) counter_old [] = if counter>counter_old then counter e
 
 fun maxInstances pls = 
   let
-    val test = quicksort2 pls
+    val test = quicksort pls
     fun maxInstancesH [] max = max
     |   maxInstancesH (p::pls) max = 
       isin (p,1) 0 pls
@@ -115,7 +96,7 @@ fun makeNList n =
 
 
 
-fun main_test file = 
+fun site_names file = 
   let
     val sls = parse file
     val (boom:char list list) = map explode sls
@@ -136,18 +117,18 @@ fun main_test file =
   in
     (main_testH prefixes suffixes 0 1)
   end
+
+
 (*
+(*MLTON STUFF*)
 fun main() =
   let
     val t= (CommandLine.arguments())
     val b = hd(t)
-    val iti = main_test b
+    val iti = site_names b
     val st = Int.toString iti
   in 
     print (st^"\n")
   end
 val _ = main ()
 *)
-
-
-fun site_names file = main_test file
