@@ -21,6 +21,27 @@ fun parse file =
   in
     read_name n nil
   end
+fun quicksort2 (pls:string list) =
+  let
+    val filt = List.filter
+    fun quicksort << xs = 
+      let
+        fun qs [] = []
+        | qs [x] = [x]
+        | qs (p::xs) = 
+        let
+          val lessThanP = (fn x => << (x, p))
+        in
+          qs (filt lessThanP xs) @ p :: (qs (filt (not o lessThanP) xs))
+        end
+      in
+        qs xs
+      end
+   in
+     quicksort String.< pls
+   end
+
+
 fun quicksort [] = []
 |   quicksort (p::lst) = 
       let fun quicksort_r pivot ([], front, back) =  (quicksort front) @ [pivot] @ (quicksort back)
@@ -76,7 +97,7 @@ fun isin (prefix,counter) counter_old [] = if counter>counter_old then counter e
 
 fun maxInstances pls = 
   let
-    val test = quicksort pls
+    val test = quicksort2 pls
     fun maxInstancesH [] max = max
     |   maxInstancesH (p::pls) max = 
       isin (p,1) 0 pls
@@ -97,7 +118,7 @@ fun makeNList n =
 fun main_test file = 
   let
     val sls = parse file
-    val boom = map explode sls
+    val (boom:char list list) = map explode sls
     val suffixes = get_TailsC boom
     val prefixes = get_HeadsC boom 
     val endyou = makeNList (length suffixes)
