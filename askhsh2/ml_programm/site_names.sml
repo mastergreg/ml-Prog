@@ -21,149 +21,68 @@ fun parse file =
   in
     read_name n nil
   end
-(*fun fill ls = *)
+fun quicksort [] = []
+|   quicksort (p::lst) = 
+      let fun quicksort_r pivot ([], front, back) =  (quicksort front) @ [pivot] @ (quicksort back)
+          |   quicksort_r pivot (x::xs, front, back) = 
+                if x < pivot then 
+                   quicksort_r pivot (xs, x::front, back)
+                else 
+                   quicksort_r pivot (xs, front, x::back)
+      in
+         quicksort_r p (lst, [], [])
+      end
 (*
-fun existsInTrie (ls:trie) (cht:char) =
-    let
-      fun existsInTrieH Empty _ = false
-      |   existsInTrieH (Head(ls)) _ = false
-      |   existsInTrieH (Node (children,ch,counter,level,chs)) (cht:char) = ch=cht
-    in
-      existsInTrieH ls cht
-    end
-
-fun increaseTrieCnT (Node (ls,ch,counter,level,chs))  = (Node (ls,ch,counter+1,level,chs))
-|   increaseTrieCnT (l:trie)  = l 
-    
-fun appendToTrie (Node (ls,ch,count,level,chs)) (cht:char) =(Node ((Node ([],cht,1,level+1,0)::ls),ch,count,level,chs+1))
-|   appendToTrie (l:trie) (cht:char) = l
-    
-    
-*)
-(*
-fun nextTlist [] c level = [(Node ([],c,1,level,0))]
-|   nextTlist (t::tls) c level = if existsInTrie t c then ((increaseTrieCnT t)::tls) else (t::(nextTlist tls c level))
-*)
-(*
-fun fillnames str:string tr:trie = 
-  let
-    val name = explode (str)
-    fun fillnamesH []   tri:trie = tri
-    |   fillnamesH (n::ame) Head(ls) = (Head (nextTlist ls n 0)
-    |   fillnamesH (n::ame) tri:trie = 
-      
+fun isin prefix counter [] = counter
+|   isin "" counter _ = 0
+|   isin prefix counter ((st::sts)) = 
+  if prefix=st then isin prefix (counter+1) sts else isin prefix counter sts
 
 *)
-(*
-fun myparseStart file = 
+
+fun mhdc [] = ""
+|   mhdc ls = str(hd(ls))
+fun get_HeadsC cls = map mhdc cls 
+
+fun mhdS [] = ""
+|   mhdS ls = hd(ls)
+
+fun mtlc [] = [] 
+|   mtlc ls = tl(ls)
+fun get_TailsC cls = map mtlc cls 
+
+fun conStrList l1 l2 = 
   let
-    val input = TextIO.openIn file
-    val garbage = Option.valOf (TextIO.inputLine input)
-    fun myparse () = Option.valOf (TextIO.input1 input)
-    fun filldom (x:char) (trs:trie) = existsInTrie trs x
+    fun conStrListH [] _ acc = rev acc
+    |   conStrListH _ [] acc = rev acc
+    |   conStrListH (l1::ls1) (l2::ls2) acc = conStrListH ls1 ls2 ((l1^l2)::acc)
   in
-    filldom (myparse () ) (Head [])
+    conStrListH l1 l2 nil
   end
-*)
 
-fun isin (prefix,counter) [] = counter
-|   isin ("",counter) _ = 0
-|   isin (prefix,counter) ((st::sts):string list) = 
-  if prefix=st then isin (prefix,counter+1) sts else isin (prefix,counter) sts
 
+fun isin (prefix,counter) counter_old [] = if counter>counter_old then counter else counter_old
+|   isin ("",_) _  _ = 0
+|   isin (prefix,counter) counter_old ((st::sts)) = 
+  if prefix=st 
+    then 
+      isin (prefix,(counter+1)) counter_old sts 
+    else
+      let
+        val max = if counter_old<counter then counter else counter_old
+      in
+        isin (mhdS(sts),1) max (mtlc(sts))
+      end
 
 fun maxInstances pls = 
   let
+    val test = quicksort pls
     fun maxInstancesH [] max = max
     |   maxInstancesH (p::pls) max = 
-      let
-        val buf = isin (p,1) pls
-      in
-        if max<buf then maxInstancesH pls buf else maxInstancesH pls max
-      end
+      isin (p,1) 0 pls
   in
-    maxInstancesH pls 0
+    maxInstancesH test 0
   end
-
-
-
-fun buildPrefix (st:string) = 
-  let
-    val lst = explode st
-    fun buildPrefixH  [] pref acc = rev acc
-    |   buildPrefixH (l::lst) pref acc =
-      let
-        val prefix=pref^str(l)
-      in
-        buildPrefixH lst prefix (prefix::acc)
-      end
-    in
-      buildPrefixH lst "" []
-    end
-
-fun testList (st:string) ([]:string list) = 0
-|   testList (st:string) ((s::ls):string list) = 
-  if (st=s) then size(st) else 
-    if String.isPrefix st s then  testList st ls else 0
-     
-fun ls (ass:string list) (bss:string list) =
-  let
-    fun lsH [] _ acc = acc
-    |   lsH _ [] acc = acc
-    |   lsH ((a::ass):string list) ((b::bss):string list) acc = 
-      if a=b then lsH ass bss acc+1 else acc
-  in
-    lsH ass bss 0
-  end
-  
-
-
-fun mhd [] = ""
-|   mhd ls = hd(ls)
-fun get_Heads sls = map mhd sls 
-
-
-fun mtd [] = []
-|   mtd ls = tl(ls)
-fun get_Tails sls = map mtd sls 
-
-
-
-fun site_names file =
- let
-  val ls = parse file
-
- in
-   ls
- end
-(*
-fun nerves = t:tr list chls:string list = 
-  val nervesH [] chls = map
-*)
-
-fun put_in [] cht = [(cht,1)]
-|   put_in ((ch,cnt)::ls) cht = if ch=cht then (ch,cnt+1)::ls else (ch,cnt)::put_in ls cht
-
-(*
-fun get_head_of_strings (ls:string list) (ks:char*int) = 
-  let
-    fun ghosH [] acc remainingstring = (acc:(char*int) list,remainingstring:string list)
-    |   ghosH (l::ls)  acc remainingstring = ghosH ls (put_in acc (hd(explode(l)))) ((implode(tl(explode(l))))::remainingstring)
-  in
-    ghosH ls ks []
-  end
-
-
-
-
-fun fillalllevels sls =
-  let
-    fun nextLevel level (acc,[]:string list) = (level,(acc,[]:string list))
-    |   nextLevel level (acc,sls) = nextLevel (level+1) (get_head_of_strings(sls,acc))
-  in
-    nextLevel 1 ([],sls)
-  end
-*)
 
 fun makeNList n = 
   let
@@ -178,17 +97,36 @@ fun makeNList n =
 fun main_test file = 
   let
     val sls = parse file
-    val prefixes = (map buildPrefix sls)
-    fun main_testH ([]:string list list) (max:int) (level:int)= max 
-    |   main_testH prefixes max level= 
-      if prefixes = makeNList (length prefixes)  then max else
+    val boom = map explode sls
+    val suffixes = get_TailsC boom
+    val prefixes = get_HeadsC boom 
+    val endyou = makeNList (length suffixes)
+    fun main_testH prefixes suffixes max level= 
       let
-        val buf = (maxInstances (get_Heads prefixes))*level
+        val buf = ((maxInstances  prefixes)*(level))
+        val newmax = if max<buf then buf else max
       in
-        if max<buf then main_testH (get_Tails prefixes) buf (level+1) else main_testH (get_Tails prefixes) max (level+1)
+        if suffixes = endyou  
+          then 
+            newmax
+          else
+            main_testH (conStrList prefixes (get_HeadsC suffixes)) (get_TailsC suffixes) newmax (level+1) 
       end
   in
-    main_testH prefixes 0 1
+    (main_testH prefixes suffixes 0 1)
   end
-       
-      
+(*
+fun main() =
+  let
+    val t= (CommandLine.arguments())
+    val b = hd(t)
+    val iti = main_test b
+    val st = Int.toString iti
+  in 
+    print (st^"\n")
+  end
+val _ = main ()
+*)
+
+
+fun site_names file = main_test file
