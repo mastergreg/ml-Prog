@@ -7,20 +7,36 @@ fun parse file =
     (* Hocus pocus read an integer *)
     val n = Option.valOf (TextIO.scanStream (Int.scan StringCvt.DEC) input)
     (* Clean the new line after the integer *)
-    val garbage = TextIO.inputLine input
-    fun read_name 0 acc = rev acc
+    val _ = TextIO.inputLine input
+    fun read_name 0 acc = acc
       | read_name i acc =
         let
 	  (* Read a string *)
           val rawName = Option.valOf (TextIO.inputLine input)
 	  (* Remove the \n in the end of the line *)
-          val name = String.implode (rev (tl (rev (String.explode rawName))))
+          val name = rev (tl (rev (map (fn x => Int.toLarge(Char.ord(x)-32)) (String.explode rawName))))
         in
           read_name (i-1) (name::acc)
         end
   in
     read_name n nil
   end
+
+
+
+fun split pivot [] lower upper s = qs lower (pivot :: (qs upper s))
+|   split pivot (x::xs) lower upper s = 
+  if x < pivot
+    then split pivot xs (x::lower) upper s
+    else split pivot xs lower (x::upper) s
+and
+    qs []  s          = s
+|   qs [x] s          = (x::s)
+|   qs (pivot::rest) s = split pivot rest [] [] s
+
+fun qsort l = qs l []
+
+
 fun quicksort ([]:string list) = []
 |   quicksort (p::lst) = 
       let fun quicksort_r pivot ([], front, back) =  (quicksort front) @ [pivot] @ (quicksort back)
@@ -42,11 +58,11 @@ fun isin prefix counter [] = counter
 
 *)
 
-fun mhdc [] = ""
-|   mhdc ls = str(hd(ls))
+fun mhdc [] = 0
+|   mhdc ls = hd(ls)
 fun get_HeadsC cls = map mhdc cls 
 
-fun mhdS [] = ""
+fun mhdS [] = 0 
 |   mhdS ls = hd(ls)
 
 fun mtlc [] = [] 
@@ -57,14 +73,14 @@ fun conStrList l1 l2 =
   let
     fun conStrListH [] _ acc = rev acc
     |   conStrListH _ [] acc = rev acc
-    |   conStrListH (l1::ls1) (l2::ls2) acc = conStrListH ls1 ls2 ((l1^l2)::acc)
+    |   conStrListH (l1::ls1) (l2::ls2) acc = conStrListH ls1 ls2 ((l1*100+l2)::acc)
   in
     conStrListH l1 l2 nil
   end
 
 
 fun isin (prefix,counter) counter_old [] = if counter>counter_old then counter else counter_old
-|   isin ("",counter) counter_old  _ = counter_old 
+|   isin (0,counter) counter_old  _ = counter_old 
 |   isin (prefix,counter) counter_old ((st::sts)) = 
   if prefix=st 
     then 
@@ -78,7 +94,7 @@ fun isin (prefix,counter) counter_old [] = if counter>counter_old then counter e
 
 fun maxInstances pls = 
   let
-    val test = quicksort pls
+    val test = qsort pls
     fun maxInstancesH [] max = max
     |   maxInstancesH (p::pls) max = 
       isin (p,1) 0 pls
@@ -98,8 +114,7 @@ fun makeNList n =
 
 fun site_names file = 
   let
-    val sls = parse file
-    val (boom:char list list) = map explode sls
+    val boom = parse file
     val suffixes = get_TailsC boom
     val prefixes = get_HeadsC boom 
     val endyou = makeNList (length suffixes)
@@ -118,9 +133,8 @@ fun site_names file =
     (main_testH prefixes suffixes 0 1)
   end
 
-
-(*
 (*MLTON STUFF*)
+(*
 fun main() =
   let
     val t= (CommandLine.arguments())

@@ -1,24 +1,28 @@
-fun quicksort [] = []
-|   quicksort (p::lst) = 
-      let fun quicksort_r pivot ([], front, back) =  (quicksort front) @ [pivot] @ (quicksort back)
-          |   quicksort_r pivot (x::xs, front, back) = 
-                if x < pivot then 
-                   quicksort_r pivot (xs, x::front, back)
-                else 
-                   quicksort_r pivot (xs, front, x::back)
-      in
-         quicksort_r p (lst, [], [])
-      end
+
+fun quicksort l = 
+  let
+    fun split pivot [] lower upper s = qs lower (pivot :: (qs upper s))
+    |   split pivot (x::xs) lower upper s = 
+      if x < pivot
+        then split pivot xs (x::lower) upper s
+        else split pivot xs lower (x::upper) s
+    and
+        qs []  s          = s
+    |   qs [x] s          = (x::s)
+    |   qs (pivot::rest) s = split pivot rest [] [] s
+  in
+    qs l []
+  end
 fun nextTest (b:int) (l:int list) = 
   let
-    fun nextTesth b [] c  = []
-    |   nextTesth b l 0               = l
-    |   nextTesth b (h::t) c          = 
+    fun nextTesth _ [] _ = [] 
+    |   nextTesth _ l 0  = l
+    |   nextTesth b (h::t) c    = 
             let
               val dig = if (h+c) < b then h+c else 0
               val c = if (h+c) < b then 0 else 1
             in
-              dig :: nextTesth b t c
+              dig::nextTesth b t c
             end
   in
     nextTesth b l 1
@@ -32,7 +36,7 @@ fun extraTest (b:int) (l:int list) =
   end
     
 
-fun sub b xs ys = 
+fun subtract b xs ys = 
   let
     fun subh _ [] _ _ acc = acc
     |   subh _ _ [] _ acc = acc
@@ -53,7 +57,7 @@ fun ismagic b l =
     val sl = quicksort l
     val ls = rev sl
   in
-    sub b sl ls = l
+    subtract b sl ls = l
   end
 fun checkZero n l = 
   let
@@ -82,12 +86,12 @@ fun fancyprint n b l =
 
 fun magic b n =
   let
-    val start = nextTest b (makeNList n)
+    val start = (nextTest b (makeNList n))
     fun magicH n b l = 
       if checkZero n l then [0] 
         else 
             let
-              val candidate = sub b (rev l) l
+              val candidate = subtract b (rev l) l
             in
               if ismagic b candidate then candidate else magicH n b (extraTest b (nextTest b l))
             end
@@ -106,7 +110,7 @@ fun main() =
     val iti = magic (Option.valOf (Int.fromString b)) (Option.valOf (Int.fromString n))
     val st = LargeInt.toString iti
   in 
-    print st
+    print (st^"\n")
   end
 val _ = main ()
 

@@ -3,16 +3,22 @@
 #include <time.h>
 #include <string.h>
 #include <gmp.h>
-unsigned int magi[64],buffer[64],number2[64],number[64];
-
+#include <stdint.h>
+uint32_t buffer[64],number[64],magi[64],number2[64];
+unsigned int ndiv2;
 
 static void next_test(unsigned int n,unsigned int b)
 {
-  unsigned int buff,c=1,ndiv2=(n%2==1) ? n/2 : n/2-1;
+  unsigned int buff,c=1;
   int i = (int) n-1;
-  for (;i>=0;i--)
+  for (;i>=ndiv2;i--)
   {
     buffer[i]++;
+    if (i==ndiv2) 
+    {  
+      printf("0\n");
+      exit(0);
+    }
     if (buffer[i]<b)
     {
       break;
@@ -20,22 +26,15 @@ static void next_test(unsigned int n,unsigned int b)
     else
     {
       buffer[i]=0;
-      continue;
     }
+    
   }
-  for(i=0;i<(int)n-1;i++)
+  for(;i<n;i++)
   {
-    number[i]=buffer[i];
-    if(buffer[i+1]<buffer[i])
+    if(buffer[i]<buffer[i-1])
     {
-      buffer[i+1]=buffer[i];
+      buffer[i]=buffer[i-1];
     }
-  }
-  number[n-1]=buffer[n-1];
-  if(buffer[ndiv2]==1)
-  {
-    printf("0\n");
-    exit(0);
   }
 }
 static void print_number(unsigned int n,unsigned int b)
@@ -47,22 +46,19 @@ static void print_number(unsigned int n,unsigned int b)
   for(i=0;i<n;i++)
   {
       mpz_ui_pow_ui(rop,b,i);
-      mpz_mul_ui(rop,rop,number[n-i-1]);
+      mpz_mul_ui(rop,rop,number2[n-i-1]);
       mpz_add(bigint,bigint,rop); 
   }
   gmp_printf("%Zd\n",bigint);
 }
-static void subtract(unsigned int n,unsigned int b)
+static void subtractBuffer(unsigned int n,unsigned int b)
 {
   int buff,c=0;
-  int i;
+  int i,end=(int) n;
+  //memcpy(number2,buffer,n*4);
   for (i = (int) n-1;i>=0;i--)
   {
-    number2[i] = number[n-i-1];
-  }
-  for (i = (int) n-1;i>=0;i--)
-  {
-    buff=number2[i]-number[i]-c;
+    buff=buffer[n-i-1]-buffer[i]-c;
     if(buff<0) 
     {
       number[i]=buff+b;
@@ -71,6 +67,28 @@ static void subtract(unsigned int n,unsigned int b)
     else
     {
       number[i]=buff;
+      c=0;
+    }
+  }
+  memcpy(magi,number,n*4);
+}
+
+static void subtract(unsigned int n,unsigned int b)
+{
+  int buff,c=0;
+  int i,end=(int) n;
+  //memcmp(number2,number,n*4);
+  for (i = (int) n-1;i>=0;i--)
+  {
+    buff=number[n-i-1]-number[i]-c;
+    if(buff<0) 
+    {
+      number2[i]=buff+b;
+      c=1;
+    }
+    else
+    {
+      number2[i]=buff;
       c=0;
     }
   }
@@ -83,27 +101,17 @@ static int compare (const void *a,const void *b)
 static int ismagic(unsigned int n,unsigned int b)
 {
   unsigned int i;
+  subtractBuffer(n,b);
+  qsort(number,n,4,compare);
   subtract(n,b);
-  for(i=0;i<n;i++)
-  {
-    magi[i]=number[i];
-  }
-  qsort(number,n,sizeof(unsigned int),compare);
-  subtract(n,b);
-  for (i=0;i<n;i++)
-  {
-    if(magi[i]!=number[i]) 
-    {
-      return 0;
-    }
-  }
-  return 1;
+  return memcmp(magi,number2,n*4);
 }
 
 static unsigned int magic(unsigned int n, unsigned int b)
 {
+  ndiv2=(n%2==1) ? n/2 : n/2-1;
   next_test(n,b);
-  while(ismagic(n,b)==0)
+  while(ismagic(n,b)!=0)
   {
       next_test(n,b);
   }
