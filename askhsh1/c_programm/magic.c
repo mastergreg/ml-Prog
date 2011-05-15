@@ -9,8 +9,7 @@ unsigned int ndiv2;
 
 static void next_test(unsigned int n,unsigned int b)
 {
-  unsigned int buff,c=1;
-  int i = (int) n-1;
+  unsigned int i = n-1;
   for (;i>=ndiv2;i--)
   {
     buffer[i]++;
@@ -54,7 +53,7 @@ static void print_number(unsigned int n,unsigned int b)
 static void subtractBuffer(unsigned int n,unsigned int b)
 {
   int buff,c=0;
-  int i,end=(int) n;
+  int i;
   //memcpy(number2,buffer,n*4);
   for (i = (int) n-1;i>=0;i--)
   {
@@ -76,7 +75,7 @@ static void subtractBuffer(unsigned int n,unsigned int b)
 static void subtract(unsigned int n,unsigned int b)
 {
   int buff,c=0;
-  int i,end=(int) n;
+  int i;
   //memcmp(number2,number,n*4);
   for (i = (int) n-1;i>=0;i--)
   {
@@ -98,24 +97,19 @@ static int compare (const void *a,const void *b)
 {
   return ( *(int*)a - *(int*)b );
 }
-static int ismagic(unsigned int n,unsigned int b)
-{
-  unsigned int i;
-  subtractBuffer(n,b);
-  qsort(number,n,4,compare);
-  subtract(n,b);
-  return memcmp(magi,number2,n*4);
-}
 
 static unsigned int magic(unsigned int n, unsigned int b)
 {
   ndiv2=(n%2==1) ? n/2 : n/2-1;
-  next_test(n,b);
-  while(ismagic(n,b)!=0)
+  do
   {
-      next_test(n,b);
+    next_test(n,b);
+    subtractBuffer(n,b);
+    qsort(number,n,4,compare);
+    subtract(n,b);
   }
-   return 0;
+  while(memcmp(magi,number2,n*4)!=0);
+  return 0;
 }
 int main(int argc, char* argv[])
 {
@@ -128,9 +122,7 @@ int main(int argc, char* argv[])
   }
   sscanf(argv[1], "%u", &b);
   sscanf(argv[2], "%u", &n);
-  if(magic(n,b)==0)
-  {
-   print_number(n,b);
-  }
+  magic(n,b);
+  print_number(n,b);
   return 0;
 }
