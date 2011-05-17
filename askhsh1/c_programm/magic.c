@@ -59,7 +59,7 @@ static unsigned int magic(unsigned int n, unsigned int b)
         }
       }
     //subtractBuffer(n,b);
-      for (j=(int)b-1;j>=0;j--) count_sort_array[j]=0;
+      //for (j=(int)b-1;j>=0;j--) count_sort_array[j]=0;
       for (ii = (int) n-1;ii>=0;ii--)
       {
         buff=buffer[n-ii-1]-buffer[ii]-c;
