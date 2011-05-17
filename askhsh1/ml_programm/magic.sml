@@ -15,24 +15,25 @@ fun quicksort l =
   end
 fun nextTest (b:int) (l:int list) = 
   let
+    val bdiv2=(b div 2)+1
     fun nextTesth _ [] _ = [] 
     |   nextTesth _ l 0  = l
     |   nextTesth b (h::t) c    = 
             let
-              val dig = if (h+c) < b then h+c else 0
-              val c = if (h+c) < b then 0 else 1
+              val dig = if (h+c) <= bdiv2 then h+c else 0
+              val c = if (h+c) <= bdiv2 then 0 else 1
             in
               dig::nextTesth b t c
             end
   in
     nextTesth b l 1
   end
-fun extraTest (b:int) (l:int list) = 
+fun extraTest (l:int list) = 
   let
-    fun extraTestH b [] p acc     = acc
-    |   extraTestH b (h::t) p acc = if h >= p then extraTestH b t h (h::acc) else extraTestH b t p (p::acc)
+    fun extraTestH [] p acc     = acc
+    |   extraTestH (h::t) p acc = if h >= p then extraTestH t h (h::acc) else extraTestH t p (p::acc)
   in
-    extraTestH b (rev l) 0 []
+    extraTestH (rev l) 0 []
   end
     
 
@@ -93,7 +94,7 @@ fun magic b n =
             let
               val candidate = subtract b (rev l) l
             in
-              if ismagic b candidate then candidate else magicH n b (extraTest b (nextTest b l))
+              if ismagic b candidate then candidate else magicH n b (extraTest (nextTest b l))
             end
   in
     let
