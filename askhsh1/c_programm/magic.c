@@ -32,7 +32,7 @@ static unsigned int magic(unsigned int n, unsigned int b)
   unsigned int i;
   int buff,c=0;
   int ii;
-  
+  unsigned int bdiv2=b/2+1;
   do
   {
     //next_test(n,b);
@@ -44,7 +44,7 @@ static unsigned int magic(unsigned int n, unsigned int b)
           printf("0\n");
           exit(0);
         }
-        if (buffer[i]<b)
+        if (buffer[i]<=bdiv2)
         {
           break;
         }
