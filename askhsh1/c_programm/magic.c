@@ -7,35 +7,6 @@
 uint32_t buffer[64],number[64],magi[64],number2[64];
 unsigned int ndiv2;
 
-static void next_test(unsigned int n,unsigned int b)
-{
-  unsigned int i = n-1;
-  for (;i>=ndiv2;i--)
-  {
-    buffer[i]++;
-    if (i==ndiv2) 
-    {  
-      printf("0\n");
-      exit(0);
-    }
-    if (buffer[i]<b)
-    {
-      break;
-    }
-    else
-    {
-      buffer[i]=0;
-    }
-    
-  }
-  for(;i<n;i++)
-  {
-    if(buffer[i]<buffer[i-1])
-    {
-      buffer[i]=buffer[i-1];
-    }
-  }
-}
 static void print_number(unsigned int n,unsigned int b)
 {
   mpz_t bigint,rop;
@@ -50,49 +21,6 @@ static void print_number(unsigned int n,unsigned int b)
   }
   gmp_printf("%Zd\n",bigint);
 }
-static void subtractBuffer(unsigned int n,unsigned int b)
-{
-  int buff,c=0;
-  int i;
-  //memcpy(number2,buffer,n*4);
-  for (i = (int) n-1;i>=0;i--)
-  {
-    buff=buffer[n-i-1]-buffer[i]-c;
-    if(buff<0) 
-    {
-      number[i]=buff+b;
-      c=1;
-    }
-    else
-    {
-      number[i]=buff;
-      c=0;
-    }
-  }
-  memcpy(magi,number,n*4);
-}
-
-static void subtract(unsigned int n,unsigned int b)
-{
-  int buff,c=0;
-  int i;
-  //memcmp(number2,number,n*4);
-  for (i = (int) n-1;i>=0;i--)
-  {
-    buff=number[n-i-1]-number[i]-c;
-    if(buff<0) 
-    {
-      number2[i]=buff+b;
-      c=1;
-    }
-    else
-    {
-      number2[i]=buff;
-      c=0;
-    }
-  }
-}
-
 static int compare (const void *a,const void *b)
 {
   return ( *(int*)a - *(int*)b );
@@ -101,12 +29,71 @@ static int compare (const void *a,const void *b)
 static unsigned int magic(unsigned int n, unsigned int b)
 {
   ndiv2=(n%2==1) ? n/2 : n/2-1;
+  unsigned int i;
+  int buff,c=0;
+  int ii;
+  
   do
   {
-    next_test(n,b);
-    subtractBuffer(n,b);
+    //next_test(n,b);
+      for (i=n-1;i>=ndiv2;i--)
+      {
+        buffer[i]++;
+        if (i==ndiv2) 
+        {  
+          printf("0\n");
+          exit(0);
+        }
+        if (buffer[i]<b)
+        {
+          break;
+        }
+        else
+        {
+          buffer[i]=0;
+        }
+        
+      }
+      for(;i<n;i++)
+      {
+        if(buffer[i]<buffer[i-1])
+        {
+          buffer[i]=buffer[i-1];
+        }
+      }
+    //subtractBuffer(n,b);
+      for (ii = (int) n-1;ii>=0;ii--)
+      {
+        buff=buffer[n-ii-1]-buffer[ii]-c;
+        if(buff<0) 
+        {
+          number[ii]=buff+b;
+          c=1;
+        }
+        else
+        {
+          number[ii]=buff;
+          c=0;
+        }
+      }
+      memcpy(magi,number,n*4);
     qsort(number,n,4,compare);
-    subtract(n,b);
+    //subtract(n,b);
+      c=0;
+      for (ii = (int) n-1;ii>=0;ii--)
+      {
+        buff=number[n-ii-1]-number[ii]-c;
+        if(buff<0) 
+        {
+          number2[ii]=buff+b;
+          c=1;
+        }
+        else
+        {
+          number2[ii]=buff;
+          c=0;
+        }
+      }
   }
   while(memcmp(magi,number2,n*4)!=0);
   return 0;
