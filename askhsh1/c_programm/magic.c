@@ -5,6 +5,7 @@
 #include <gmp.h>
 #include <stdint.h>
 uint32_t buffer[64],number[64],magi[64],number2[64];
+int count_sort_array[20];
 unsigned int ndiv2;
 
 static void print_number(unsigned int n,unsigned int b)
@@ -21,17 +22,13 @@ static void print_number(unsigned int n,unsigned int b)
   }
   gmp_printf("%Zd\n",bigint);
 }
-static int compare (const void *a,const void *b)
-{
-  return ( *(int*)a - *(int*)b );
-}
 
 static unsigned int magic(unsigned int n, unsigned int b)
 {
   ndiv2=(n%2==1) ? n/2 : n/2-1;
   unsigned int i;
   int buff,c=0;
-  int ii;
+  int ii,j=(int)b-1;
   unsigned int bdiv2=b/2+1;
   do
   {
@@ -75,9 +72,22 @@ static unsigned int magic(unsigned int n, unsigned int b)
           number[ii]=buff;
           c=0;
         }
+        count_sort_array[number[ii]]++;
       }
       memcpy(magi,number,n*4);
-    qsort(number,n,4,compare);
+      ii=(int) n-1;
+
+      for (;j>=0;j--) count_sort_array[j]=0;
+      for (ii=(int) n-1,j=(int) b-1;j>=0;j--)
+      {
+        while(count_sort_array[j]>0)
+        {
+          number[ii]=j;
+          ii--;
+          count_sort_array[j]--;
+        }
+      }
+    //qsort(number,n,4,compare);
     //subtract(n,b);
       c=0;
       for (ii = (int) n-1;ii>=0;ii--)
