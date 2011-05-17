@@ -28,7 +28,7 @@ static unsigned int magic(unsigned int n, unsigned int b)
   ndiv2=(n%2==1) ? n/2 : n/2-1;
   unsigned int i;
   int buff,c=0;
-  int ii,j=(int)b-1;
+  int ii,j;
   unsigned int bdiv2=b/2+1;
   do
   {
@@ -59,6 +59,7 @@ static unsigned int magic(unsigned int n, unsigned int b)
         }
       }
     //subtractBuffer(n,b);
+      for (j=(int)b-1;j>=0;j--) count_sort_array[j]=0;
       for (ii = (int) n-1;ii>=0;ii--)
       {
         buff=buffer[n-ii-1]-buffer[ii]-c;
@@ -75,9 +76,8 @@ static unsigned int magic(unsigned int n, unsigned int b)
         count_sort_array[number[ii]]++;
       }
       memcpy(magi,number,n*4);
-      ii=(int) n-1;
+      //distribution sort
 
-      for (;j>=0;j--) count_sort_array[j]=0;
       for (ii=(int) n-1,j=(int) b-1;j>=0;j--)
       {
         while(count_sort_array[j]>0)
